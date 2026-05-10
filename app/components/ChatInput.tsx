@@ -9,9 +9,10 @@ interface Props {
   placeholder?: string;
   hint?: string;
   children?: React.ReactNode;
+  footerControls?: React.ReactNode;
 }
 
-export default function ChatInput({ onSend, sending, placeholder = "Type a message…", hint, children }: Props) {
+export default function ChatInput({ onSend, sending, placeholder = "Type a message…", hint, children, footerControls }: Props) {
   const [input, setInput] = useState("");
   const { ref, adjust, reset } = useAutoResize();
 
@@ -45,15 +46,18 @@ export default function ChatInput({ onSend, sending, placeholder = "Type a messa
             disabled={sending}
             className="w-full bg-transparent resize-none px-5 pt-4 pb-2 text-sm text-foreground placeholder-muted-foreground focus:outline-none disabled:opacity-50 max-h-48"
           />
-          <div className="flex items-center justify-between px-3 pb-3 pt-1">
-            <p className="text-[11px] text-muted-foreground pl-2 hidden sm:block">
-              {hint ?? (
-                <>
-                  <kbd className="px-1 py-0.5 rounded bg-muted border border-border font-mono text-[10px]">↵</kbd> send ·{" "}
-                  <kbd className="px-1 py-0.5 rounded bg-muted border border-border font-mono text-[10px]">⇧↵</kbd> new line
-                </>
-              )}
-            </p>
+          <div className="flex items-center justify-between gap-2 px-3 pb-3 pt-1">
+            <div className="flex items-center gap-2 min-w-0">
+              {footerControls}
+              <p className="text-[11px] text-muted-foreground hidden md:block">
+                {hint ?? (
+                  <>
+                    <kbd className="px-1 py-0.5 rounded bg-muted border border-border font-mono text-[10px]">↵</kbd> send ·{" "}
+                    <kbd className="px-1 py-0.5 rounded bg-muted border border-border font-mono text-[10px]">⇧↵</kbd> new line
+                  </>
+                )}
+              </p>
+            </div>
             <button
               onClick={handleSend}
               disabled={!input.trim() || sending}

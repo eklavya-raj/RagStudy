@@ -2,7 +2,7 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useAuth } from "@clerk/nextjs";
 import Link from "next/link";
-import { Sparkles, AlertCircle, FileText, X, AtSign, Loader2, MessageSquare, Send, BookOpen, Code, Lightbulb, GraduationCap } from "lucide-react";
+import { Sparkles, AlertCircle, FileText, X, AtSign, Loader2, Send, BookOpen, Code, Lightbulb, GraduationCap } from "lucide-react";
 import { useChat } from "@/app/lib/hooks/useChat";
 import { DEFAULT_MODEL } from "@/app/lib/models";
 import { useAutoResize } from "@/app/lib/hooks/useAutoResize";
@@ -35,20 +35,6 @@ export default function GeneralChat() {
         <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-primary/10 rounded-full blur-3xl opacity-60" />
       </div>
 
-      {/* Header */}
-      <header className="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-border/60 bg-background/70 backdrop-blur-xl shrink-0 gap-3">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-violet-500 to-purple-700 flex items-center justify-center shadow-md shadow-violet-600/30">
-            <MessageSquare size={14} className="text-white" />
-          </div>
-          <div>
-            <p className="text-sm font-semibold text-foreground leading-none">New Chat</p>
-            <p className="text-[11px] text-muted-foreground mt-0.5">Type @ to attach a document</p>
-          </div>
-        </div>
-        <ModelSelector value={model} onChange={setModel} />
-      </header>
-
       {/* Messages / hero */}
       <div className="flex-1 overflow-y-auto">
         {empty ? (
@@ -75,6 +61,8 @@ export default function GeneralChat() {
         onSend={sendMessage}
         attachedDoc={attachedDoc}
         onAttach={setAttachedDoc}
+        model={model}
+        onModelChange={setModel}
       />
     </div>
   );
@@ -130,9 +118,11 @@ interface InputProps {
   onSend: (text: string) => void;
   attachedDoc: Doc | null;
   onAttach: (doc: Doc | null) => void;
+  model: string;
+  onModelChange: (model: string) => void;
 }
 
-function GeneralChatInput({ sending, onSend, attachedDoc, onAttach }: InputProps) {
+function GeneralChatInput({ sending, onSend, attachedDoc, onAttach, model, onModelChange }: InputProps) {
   const { getToken } = useAuth();
   const [input, setInput] = useState("");
   const { ref: textareaRef, adjust, reset } = useAutoResize();
@@ -266,11 +256,14 @@ function GeneralChatInput({ sending, onSend, attachedDoc, onAttach }: InputProps
             className="w-full bg-transparent resize-none px-5 pt-4 pb-2 text-sm text-foreground placeholder-muted-foreground focus:outline-none disabled:opacity-50 max-h-48"
           />
 
-          <div className="flex items-center justify-between px-3 pb-3 pt-1">
-            <p className="text-[11px] text-muted-foreground pl-2 hidden sm:block">
-              <kbd className="px-1 py-0.5 rounded bg-muted border border-border font-mono text-[10px]">↵</kbd> send ·{" "}
-              <kbd className="px-1 py-0.5 rounded bg-muted border border-border font-mono text-[10px]">⇧↵</kbd> new line
-            </p>
+          <div className="flex items-center justify-between gap-2 px-3 pb-3 pt-1">
+            <div className="flex items-center gap-2 min-w-0">
+              <ModelSelector value={model} onChange={onModelChange} placement="top" align="left" />
+              <p className="text-[11px] text-muted-foreground hidden md:block">
+                <kbd className="px-1 py-0.5 rounded bg-muted border border-border font-mono text-[10px]">↵</kbd> send ·{" "}
+                <kbd className="px-1 py-0.5 rounded bg-muted border border-border font-mono text-[10px]">⇧↵</kbd> new line
+              </p>
+            </div>
             <button
               onClick={handleSend}
               disabled={!input.trim() || sending}

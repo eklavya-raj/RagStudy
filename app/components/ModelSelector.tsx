@@ -6,9 +6,11 @@ import { MODELS, isFreeModel } from "@/app/lib/models";
 interface Props {
   value: string;
   onChange: (value: string) => void;
+  placement?: "top" | "bottom";
+  align?: "left" | "right";
 }
 
-export default function ModelSelector({ value, onChange }: Props) {
+export default function ModelSelector({ value, onChange, placement = "bottom", align = "right" }: Props) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const containerRef = useRef<HTMLDivElement>(null);
@@ -39,7 +41,19 @@ export default function ModelSelector({ value, onChange }: Props) {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-72 bg-popover border border-border rounded-xl shadow-2xl shadow-black/10 dark:shadow-black/40 z-50 overflow-hidden animate-scale origin-top-right">
+        <div
+          className={`absolute w-[min(18rem,calc(100vw-2rem))] bg-popover border border-border rounded-xl shadow-2xl shadow-black/10 dark:shadow-black/40 z-50 overflow-hidden animate-scale ${
+            align === "left" ? "left-0" : "right-0"
+          } ${
+            placement === "top"
+              ? align === "left"
+                ? "bottom-full mb-2 origin-bottom-left"
+                : "bottom-full mb-2 origin-bottom-right"
+              : align === "left"
+                ? "top-full mt-2 origin-top-left"
+                : "top-full mt-2 origin-top-right"
+          }`}
+        >
           <div className="p-2 border-b border-border">
             <div className="flex items-center gap-2 bg-muted rounded-lg px-2.5 py-2">
               <Search size={13} className="text-muted-foreground shrink-0" />

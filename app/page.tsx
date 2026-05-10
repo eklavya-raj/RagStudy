@@ -1,8 +1,7 @@
-"use client";
 import Link from "next/link";
-import { useAuth } from "@clerk/nextjs";
-import { SignInButton, SignUpButton } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { FileText, MessageSquare, Zap, Shield, ArrowRight, BookOpen } from "lucide-react";
+import LandingAuthButtons from "./components/LandingAuthButtons";
 
 const features = [
   {
@@ -27,8 +26,8 @@ const features = [
   },
 ];
 
-export default function Home() {
-  const { isSignedIn, isLoaded } = useAuth();
+export default async function Home() {
+  const { userId } = await auth();
 
   return (
     <main className="min-h-[calc(100vh-3.5rem)] flex flex-col">
@@ -53,11 +52,11 @@ export default function Home() {
 
         <p className="text-lg text-muted-foreground max-w-md mb-10 leading-relaxed">
           Upload your PDFs, notes, and textbooks. Ask questions, get
-          explanations, and actually understand what you're studying.
+          explanations, and actually understand what you&apos;re studying.
         </p>
 
         <div className="flex items-center gap-3 flex-wrap justify-center">
-          {isLoaded && isSignedIn ? (
+          {userId ? (
             <Link
               href="/dashboard"
               className="inline-flex items-center gap-2 bg-primary hover:opacity-90 text-primary-foreground px-6 py-2.5 rounded-xl font-medium transition-all text-sm shadow-lg shadow-violet-600/25 hover:shadow-violet-600/40"
@@ -65,18 +64,7 @@ export default function Home() {
               Go to Dashboard <ArrowRight size={16} />
             </Link>
           ) : (
-            <>
-              <SignUpButton>
-                <button className="inline-flex items-center gap-2 bg-primary hover:opacity-90 text-primary-foreground px-6 py-2.5 rounded-xl font-medium transition-all text-sm cursor-pointer shadow-lg shadow-violet-600/25 hover:shadow-violet-600/40">
-                  Get started free <ArrowRight size={16} />
-                </button>
-              </SignUpButton>
-              <SignInButton>
-                <button className="text-sm text-muted-foreground hover:text-foreground px-4 py-2.5 transition-colors cursor-pointer">
-                  Sign in
-                </button>
-              </SignInButton>
-            </>
+            <LandingAuthButtons />
           )}
         </div>
       </section>

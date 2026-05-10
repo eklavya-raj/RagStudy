@@ -27,23 +27,6 @@ export default function ChatInterface({ documentId }: { documentId: string }) {
         <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-primary/10 rounded-full blur-3xl opacity-60" />
       </div>
 
-      {/* Header */}
-      <header className="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-border/60 bg-background/70 backdrop-blur-xl shrink-0 gap-3">
-        <div className="flex items-center gap-3 min-w-0">
-          <Link href="/dashboard" className="p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-all shrink-0">
-            <ArrowLeft size={16} />
-          </Link>
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-violet-500 to-purple-700 flex items-center justify-center shadow-md shadow-violet-600/30 shrink-0">
-            <FileText size={14} className="text-white" />
-          </div>
-          <div className="min-w-0">
-            <p className="text-sm font-semibold text-foreground leading-none">Document Chat</p>
-            <p className="text-[11px] text-muted-foreground mt-0.5 font-mono tracking-wide">{documentId.slice(0, 8)}…</p>
-          </div>
-        </div>
-        <ModelSelector value={model} onChange={setModel} />
-      </header>
-
       {/* Body */}
       <div className="flex-1 overflow-y-auto">
         {empty ? (
@@ -99,6 +82,18 @@ export default function ChatInterface({ documentId }: { documentId: string }) {
         onSend={sendMessage}
         sending={sending}
         placeholder="Ask about this document…"
+        footerControls={
+          <>
+            <Link
+              href="/dashboard"
+              className="w-9 h-9 flex items-center justify-center rounded-xl text-muted-foreground hover:text-foreground hover:bg-accent transition-all shrink-0"
+              aria-label="Back to dashboard"
+            >
+              <ArrowLeft size={15} />
+            </Link>
+            <ModelSelector value={model} onChange={setModel} placement="top" align="left" />
+          </>
+        }
       />
     </div>
   );
