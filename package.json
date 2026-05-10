@@ -6,7 +6,8 @@
     "onlyBuiltDependencies": ["esbuild", "@clerk/shared", "@openrouter/sdk"]
   },
   "scripts": {
-    "dev": "concurrently \"next dev\" \"pnpm --filter backend dev\"",
+    "all": "concurrently \"next dev\" \"pnpm --filter backend dev\"",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
