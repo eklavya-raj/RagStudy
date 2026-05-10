@@ -1,6 +1,24 @@
+"use client";
 import Image from "next/image";
+import { useEffect } from "react";
+import { useAuth } from "@clerk/nextjs";
 
 export default function Home() {
+  const { getToken } = useAuth();
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = await getToken();
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await response.json();
+      console.log(data);
+    };
+    fetchData();
+  }, [getToken]);
+  
   return (
     <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
