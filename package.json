@@ -6,32 +6,13 @@
     "onlyBuiltDependencies": ["esbuild", "@clerk/shared", "@openrouter/sdk"]
   },
   "scripts": {
-    "all": "concurrently \"next dev\" \"pnpm --filter backend dev\"",
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
-  },
-  "dependencies": {
-    "@clerk/nextjs": "^7.3.3",
-    "katex": "^0.16.45",
-    "lucide-react": "^1.14.0",
-    "next": "16.2.6",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
-    "react-markdown": "^10.1.0",
-    "rehype-katex": "^7.0.1",
-    "remark-math": "^6.0.0"
+    "all": "concurrently \"pnpm --filter frontend dev\" \"pnpm --filter backend dev\"",
+    "dev": "pnpm --filter frontend dev",
+    "build": "pnpm --filter frontend build && pnpm --filter backend build",
+    "start": "pnpm --filter frontend start",
+    "lint": "pnpm --filter frontend lint"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "concurrently": "^9.2.1",
-    "eslint": "^9",
-    "eslint-config-next": "16.2.6",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "concurrently": "^9.2.1"
   }
 }
