@@ -2,6 +2,9 @@
   "name": "ragstudy",
   "version": "0.1.0",
   "private": true,
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild", "@clerk/shared", "@openrouter/sdk"]
+  },
   "scripts": {
     "dev": "concurrently \"next dev\" \"pnpm --filter backend dev\"",
     "build": "next build",
