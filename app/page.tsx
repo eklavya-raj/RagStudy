@@ -1,83 +1,103 @@
 "use client";
-import Image from "next/image";
-import { useEffect } from "react";
+import Link from "next/link";
 import { useAuth } from "@clerk/nextjs";
+import { SignInButton, SignUpButton } from "@clerk/nextjs";
+import { FileText, MessageSquare, Zap, Shield, ArrowRight, BookOpen } from "lucide-react";
+
+const features = [
+  {
+    icon: FileText,
+    title: "Any format",
+    desc: "PDF, DOCX, Markdown, plain text — upload whatever you study from.",
+  },
+  {
+    icon: Zap,
+    title: "Instant embeddings",
+    desc: "Documents are chunked and embedded automatically. Ready to query in seconds.",
+  },
+  {
+    icon: MessageSquare,
+    title: "Streaming chat",
+    desc: "Ask questions and get answers streamed in real-time with source context.",
+  },
+  {
+    icon: Shield,
+    title: "Private by default",
+    desc: "Your documents are tied to your account. Nobody else can access them.",
+  },
+];
 
 export default function Home() {
-  const { getToken } = useAuth();
-  useEffect(() => {
-    const fetchData = async () => {
-      const token = await getToken();
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-      console.log(data);
-    };
-    fetchData();
-  }, [getToken]);
-  
+  const { isSignedIn, isLoaded } = useAuth();
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="min-h-[calc(100vh-3.5rem)] flex flex-col">
+      {/* Hero */}
+      <section className="flex-1 flex flex-col items-center justify-center px-4 py-24 text-center relative overflow-hidden">
+        {/* Background glow */}
+        <div className="absolute inset-0 -z-10 overflow-hidden">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/10 rounded-full blur-3xl" />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/30 bg-primary/10 text-primary text-xs font-medium mb-6">
+          <BookOpen size={12} />
+          AI-powered study assistant
         </div>
-      </main>
-    </div>
+
+        <h1 className="text-5xl sm:text-6xl font-bold tracking-tight text-foreground max-w-2xl leading-[1.1] mb-5">
+          Chat with your{" "}
+          <span className="bg-gradient-to-r from-violet-500 to-purple-600 dark:from-violet-400 dark:to-purple-400 bg-clip-text text-transparent">
+            study materials
+          </span>
+        </h1>
+
+        <p className="text-lg text-muted-foreground max-w-md mb-10 leading-relaxed">
+          Upload your PDFs, notes, and textbooks. Ask questions, get
+          explanations, and actually understand what you're studying.
+        </p>
+
+        <div className="flex items-center gap-3 flex-wrap justify-center">
+          {isLoaded && isSignedIn ? (
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center gap-2 bg-primary hover:opacity-90 text-primary-foreground px-6 py-2.5 rounded-xl font-medium transition-all text-sm shadow-lg shadow-violet-600/25 hover:shadow-violet-600/40"
+            >
+              Go to Dashboard <ArrowRight size={16} />
+            </Link>
+          ) : (
+            <>
+              <SignUpButton>
+                <button className="inline-flex items-center gap-2 bg-primary hover:opacity-90 text-primary-foreground px-6 py-2.5 rounded-xl font-medium transition-all text-sm cursor-pointer shadow-lg shadow-violet-600/25 hover:shadow-violet-600/40">
+                  Get started free <ArrowRight size={16} />
+                </button>
+              </SignUpButton>
+              <SignInButton>
+                <button className="text-sm text-muted-foreground hover:text-foreground px-4 py-2.5 transition-colors cursor-pointer">
+                  Sign in
+                </button>
+              </SignInButton>
+            </>
+          )}
+        </div>
+      </section>
+
+      {/* Features */}
+      <section className="px-4 pb-24 max-w-4xl mx-auto w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {features.map(({ icon: Icon, title, desc }) => (
+            <div
+              key={title}
+              className="p-5 rounded-2xl border border-border bg-card hover:border-muted-foreground/30 hover:shadow-lg hover:shadow-black/5 dark:hover:shadow-black/20 transition-all"
+            >
+              <div className="w-9 h-9 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center mb-3">
+                <Icon size={16} className="text-primary" />
+              </div>
+              <h3 className="font-semibold text-foreground mb-1">{title}</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">{desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    </main>
   );
 }

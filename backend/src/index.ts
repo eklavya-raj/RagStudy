@@ -11,6 +11,12 @@ dotenv.config({ path: '.env.local' })
 const app = express();
 const port = process.env.PORT ? parseInt(process.env.PORT) : 3001;
 
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+}));
+
 app.use(clerkMiddleware({
     publishableKey: process.env.CLERK_PUBLISHABLE_KEY,
     secretKey: process.env.CLERK_SECRET_KEY,
@@ -18,9 +24,6 @@ app.use(clerkMiddleware({
 
 app.use(express.json());
 
-app.use(cors({
-  origin: process.env.FRONTEND_URL || '*',
-}));
 app.use(rateLimit({
   windowMs: 60 * 1000,
   maxRequests: 50

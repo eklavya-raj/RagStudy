@@ -154,20 +154,25 @@ router.get("/documents", async (req, res) => {
     return;
   }
 
-  const db = await getDB();
-  const docs = await db
-    .select({
-      id: documentsTable.id,
-      name: documentsTable.name,
-      fileType: documentsTable.fileType,
-      fileSize: documentsTable.fileSize,
-      chunkCount: documentsTable.chunkCount,
-      createdAt: documentsTable.createdAt,
-    })
-    .from(documentsTable)
-    .where(eq(documentsTable.userId, userId));
-
-  res.json(docs);
+  try {
+    const db = await getDB();
+    const docs = await db
+      .select({
+        id: documentsTable.id,
+        name: documentsTable.name,
+        fileType: documentsTable.fileType,
+        fileSize: documentsTable.fileSize,
+        chunkCount: documentsTable.chunkCount,
+        createdAt: documentsTable.createdAt,
+      })
+      .from(documentsTable)
+      .where(eq(documentsTable.userId, userId));
+    res.json(docs);
+  } catch (err: unknown) {
+    const pg = err as Record<string, unknown>;
+    console.error("[/api/documents] DB error:", pg.message, pg.code, pg.detail);
+    res.status(500).json({ error: "Database error", detail: pg.message });
+  }
 });
 
 // DELETE /api/documents/:id — delete a document and all its chunks

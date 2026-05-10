@@ -1,26 +1,159 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ─── Light theme (default) ─── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: hsl(0 0% 100%);
+  --foreground: hsl(240 10% 4%);
+
+  --card: hsl(0 0% 100%);
+  --card-foreground: hsl(240 10% 4%);
+
+  --popover: hsl(0 0% 100%);
+  --popover-foreground: hsl(240 10% 4%);
+
+  --muted: hsl(240 5% 96%);
+  --muted-foreground: hsl(240 4% 46%);
+
+  --subtle: hsl(240 5% 98%);
+
+  --border: hsl(240 6% 90%);
+  --input: hsl(240 6% 90%);
+
+  --primary: hsl(263 70% 50%);
+  --primary-foreground: hsl(0 0% 100%);
+  --primary-soft: hsl(263 70% 96%);
+
+  --accent: hsl(240 5% 96%);
+  --accent-foreground: hsl(240 6% 10%);
+
+  --destructive: hsl(0 72% 51%);
+  --destructive-foreground: hsl(0 0% 100%);
+
+  --success: hsl(142 71% 45%);
+
+  --ring: hsl(263 70% 50%);
+}
+
+/* ─── Dark theme ─── */
+.dark {
+  --background: hsl(240 10% 4%);
+  --foreground: hsl(0 0% 98%);
+
+  --card: hsl(240 8% 6%);
+  --card-foreground: hsl(0 0% 98%);
+
+  --popover: hsl(240 9% 7%);
+  --popover-foreground: hsl(0 0% 98%);
+
+  --muted: hsl(240 4% 12%);
+  --muted-foreground: hsl(240 5% 60%);
+
+  --subtle: hsl(240 6% 9%);
+
+  --border: hsl(240 4% 15%);
+  --input: hsl(240 4% 15%);
+
+  --primary: hsl(263 70% 60%);
+  --primary-foreground: hsl(0 0% 100%);
+  --primary-soft: hsl(263 60% 14%);
+
+  --accent: hsl(240 4% 12%);
+  --accent-foreground: hsl(0 0% 98%);
+
+  --destructive: hsl(0 62% 55%);
+  --destructive-foreground: hsl(0 0% 98%);
+
+  --success: hsl(142 60% 55%);
+
+  --ring: hsl(263 70% 60%);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-subtle: var(--subtle);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-soft: var(--primary-soft);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-success: var(--success);
+  --color-ring: var(--ring);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "cv11", "ss01", "ss03";
+}
+
+::selection {
+  background: color-mix(in oklab, var(--primary) 25%, transparent);
+  color: var(--foreground);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 9999px;
+  border: 2px solid var(--background);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in oklab, var(--muted-foreground) 40%, transparent);
+}
+
+/* KaTeX color tweaks */
+.katex { color: var(--foreground); }
+
+/* Animations */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+.animate-in {
+  animation: fade-in 0.15s ease-out;
+}
+.animate-scale {
+  animation: scale-in 0.12s ease-out;
+}
+
+/* Prevent FOUC during theme hydration */
+html.theme-ready body {
+  transition: background-color 0.2s ease, color 0.2s ease;
 }

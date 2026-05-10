@@ -101,6 +101,7 @@ router.post("/chat", async (req, res) => {
       model,
       messages: [...contextMessages, ...messages],
       stream: true,
+      maxTokens: 2048,
     },
   });
 
