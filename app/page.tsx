@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { FileText, MessageSquare, Zap, Shield, ArrowRight, BookOpen } from "lucide-react";
-import LandingAuthButtons from "./components/LandingAuthButtons";
+import LandingAuthButtons from "@/components/LandingAuthButtons";
 
 const features = [
   {

@@ -1,7 +1,7 @@
 "use client";
 import { Bot, User } from "lucide-react";
 import MarkdownContent from "./MarkdownContent";
-import type { ChatMessage } from "@/app/lib/types";
+import type { ChatMessage } from "@/lib/types";
 
 interface Props {
   message: ChatMessage;

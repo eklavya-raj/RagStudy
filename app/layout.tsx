@@ -1,12 +1,14 @@
 import type { Metadata } from 'next'
 import { ClerkProvider } from '@clerk/nextjs'
 import { auth } from '@clerk/nextjs/server'
+import { cookies } from 'next/headers'
 import { Geist, Geist_Mono } from 'next/font/google'
 import Link from 'next/link'
 import './globals.css'
 import 'katex/dist/katex.min.css'
-import { ThemeProvider } from './components/ThemeProvider'
-import HeaderAuthControls from './components/HeaderAuthControls'
+import { ThemeProvider } from '@/components/ThemeProvider'
+import HeaderAuthControls from '@/components/HeaderAuthControls'
+import { isTheme, THEME_COOKIE_NAME } from '@/lib/theme'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -30,11 +32,20 @@ export default async function RootLayout({
 }>) {
   const { userId } = await auth()
   const isSignedIn = Boolean(userId)
+  const cookieStore = await cookies()
+  const themeCookie = cookieStore.get(THEME_COOKIE_NAME)?.value ?? null
+  const initialTheme = isTheme(themeCookie) ? themeCookie : 'system'
+  const initialResolvedTheme = initialTheme === 'dark' ? 'dark' : 'light'
 
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      className={initialResolvedTheme === 'dark' ? 'dark' : undefined}
+      style={{ colorScheme: initialResolvedTheme }}
+      suppressHydrationWarning
+    >
       <body className={`${geistSans.variable} ${geistMono.variable} bg-background text-foreground`}>
-        <ThemeProvider>
+        <ThemeProvider initialTheme={initialTheme}>
           <ClerkProvider>
             <header className="sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur-xl">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">

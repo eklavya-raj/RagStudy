@@ -1,7 +1,7 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import { ChevronDown, Search, Check } from "lucide-react";
-import { MODELS, isFreeModel } from "@/app/lib/models";
+import { MODELS, isFreeModel } from "@/lib/models";
 
 interface Props {
   value: string;

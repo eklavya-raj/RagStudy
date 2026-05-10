@@ -56,7 +56,11 @@ export default function DashboardPage() {
     setLoading(false);
   }, [getToken, base]);
 
-  useEffect(() => { fetchDocs(); }, [fetchDocs]);
+  useEffect(() => {
+    queueMicrotask(() => {
+      void fetchDocs();
+    });
+  }, [fetchDocs]);
 
   async function uploadFile(file: File) {
     setUploadError(null);

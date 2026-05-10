@@ -2,11 +2,11 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, AlertCircle, FileText, BookOpen, ListChecks, HelpCircle, Quote } from "lucide-react";
-import { useChat } from "@/app/lib/hooks/useChat";
-import { DEFAULT_MODEL } from "@/app/lib/models";
-import ModelSelector from "@/app/components/ModelSelector";
-import ChatBubble from "@/app/components/ChatBubble";
-import ChatInput from "@/app/components/ChatInput";
+import { useChat } from "@/lib/hooks/useChat";
+import { DEFAULT_MODEL } from "@/lib/models";
+import ModelSelector from "@/components/ModelSelector";
+import ChatBubble from "@/components/ChatBubble";
+import ChatInput from "@/components/ChatInput";
 
 const QUESTIONS = [
   { icon: BookOpen, label: "Summarize", prompt: "Give me a concise summary of this document." },

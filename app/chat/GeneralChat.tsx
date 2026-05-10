@@ -3,12 +3,12 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { useAuth } from "@clerk/nextjs";
 import Link from "next/link";
 import { Sparkles, AlertCircle, FileText, X, AtSign, Loader2, Send, BookOpen, Code, Lightbulb, GraduationCap } from "lucide-react";
-import { useChat } from "@/app/lib/hooks/useChat";
-import { DEFAULT_MODEL } from "@/app/lib/models";
-import { useAutoResize } from "@/app/lib/hooks/useAutoResize";
-import type { Doc } from "@/app/lib/types";
-import ModelSelector from "@/app/components/ModelSelector";
-import ChatBubble from "@/app/components/ChatBubble";
+import { useChat } from "@/lib/hooks/useChat";
+import { DEFAULT_MODEL } from "@/lib/models";
+import { useAutoResize } from "@/lib/hooks/useAutoResize";
+import type { Doc } from "@/lib/types";
+import ModelSelector from "@/components/ModelSelector";
+import ChatBubble from "@/components/ChatBubble";
 
 const SUGGESTIONS = [
   { icon: GraduationCap, label: "Explain a concept", prompt: "Explain the concept of recursion with a simple example." },
@@ -130,9 +130,11 @@ function GeneralChatInput({ sending, onSend, attachedDoc, onAttach, model, onMod
 
   const [docs, setDocs] = useState<Doc[]>([]);
   const [docsLoaded, setDocsLoaded] = useState(false);
-  const [showPicker, setShowPicker] = useState(false);
-  const [docQuery, setDocQuery] = useState("");
+  const [pickerDismissed, setPickerDismissed] = useState(false);
   const pickerRef = useRef<HTMLDivElement>(null);
+  const docMatch = input.match(/@(\w*)$/);
+  const docQuery = docMatch?.[1] ?? "";
+  const showPicker = Boolean(docMatch) && !pickerDismissed;
 
   const fetchDocs = useCallback(async () => {
     if (docsLoaded) return;
@@ -148,20 +150,16 @@ function GeneralChatInput({ sending, onSend, attachedDoc, onAttach, model, onMod
   }, [getToken, base, docsLoaded]);
 
   useEffect(() => {
-    const m = input.match(/@(\w*)$/);
-    if (m) {
-      setDocQuery(m[1]);
-      setShowPicker(true);
-      fetchDocs();
-    } else {
-      setShowPicker(false);
-    }
-  }, [input, fetchDocs]);
+    if (!showPicker) return;
+    queueMicrotask(() => {
+      void fetchDocs();
+    });
+  }, [showPicker, fetchDocs]);
 
   useEffect(() => {
     function onClick(e: MouseEvent) {
       if (pickerRef.current && !pickerRef.current.contains(e.target as Node))
-        setShowPicker(false);
+        setPickerDismissed(true);
     }
     document.addEventListener("mousedown", onClick);
     return () => document.removeEventListener("mousedown", onClick);
@@ -169,7 +167,7 @@ function GeneralChatInput({ sending, onSend, attachedDoc, onAttach, model, onMod
 
   function selectDoc(doc: Doc) {
     onAttach(doc);
-    setShowPicker(false);
+    setPickerDismissed(true);
     setInput(prev => prev.replace(/@\w*$/, "").trimEnd());
     textareaRef.current?.focus();
   }
@@ -248,7 +246,7 @@ function GeneralChatInput({ sending, onSend, attachedDoc, onAttach, model, onMod
           <textarea
             ref={textareaRef}
             value={input}
-            onChange={e => { setInput(e.target.value); adjust(); }}
+            onChange={e => { setInput(e.target.value); setPickerDismissed(false); adjust(); }}
             onKeyDown={onKeyDown}
             placeholder="Message… type @ to attach a document"
             rows={1}

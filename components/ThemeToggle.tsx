@@ -6,9 +6,11 @@ import { useTheme } from "./ThemeProvider";
 export default function ThemeToggle() {
   const { theme, resolved, setTheme } = useTheme();
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    setMounted(true);
     function onClick(e: MouseEvent) {
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
     }
@@ -25,7 +27,7 @@ export default function ThemeToggle() {
         aria-label="Toggle theme"
         className="w-9 h-9 flex items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-colors"
       >
-        <Icon size={16} />
+        {mounted ? <Icon size={16} /> : <Sun size={16} className="opacity-0" />}
       </button>
 
       {open && (

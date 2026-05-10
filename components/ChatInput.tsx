@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { Send, Loader2 } from "lucide-react";
-import { useAutoResize } from "@/app/lib/hooks/useAutoResize";
+import { useAutoResize } from "@/lib/hooks/useAutoResize";
 
 interface Props {
   onSend: (text: string) => void;
