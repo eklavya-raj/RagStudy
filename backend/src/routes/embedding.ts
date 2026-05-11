@@ -48,7 +48,7 @@ async function extractText(file: Express.Multer.File): Promise<string> {
   }
 }
 
-function chunkText(text: string, chunkSize = 1500, overlap = 150): string[] {
+export function chunkText(text: string, chunkSize = 1500, overlap = 150): string[] {
   const cleaned = text.replace(/\s+/g, " ").trim();
   const chunks: string[] = [];
   let start = 0;
